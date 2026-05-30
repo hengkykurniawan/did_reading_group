@@ -25,3 +25,20 @@ Notes:
 > wolfers_stevenson_simple.do" 
 
 . ssc install did_imputation
+checking did_imputation consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. ssc install event_plot
+checking event_plot consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. ssc install ftools
+checking ftools consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. ssc install require
+checking require consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. ssc install reghdfe
+checking reghdfe consistency and verifying not already installed...
