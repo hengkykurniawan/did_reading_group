@@ -1,5 +1,6 @@
 ssc install did_imputation
 ssc install event_plot
+ssc install ftools
 ssc install reghdfe
 
 
