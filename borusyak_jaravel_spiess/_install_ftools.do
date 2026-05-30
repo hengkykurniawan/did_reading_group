@@ -1,2 +1,1 @@
-capture ssc install ftools
-ftools, compile
+capture ssc install require

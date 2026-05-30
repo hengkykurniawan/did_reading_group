@@ -24,11 +24,7 @@ Notes:
 . do "c:\Users\hengk\My Drive\GitHub\did_reading_group\borusyak_jaravel_spiess\
 > _install_ftools.do" 
 
-. capture ssc install ftools
-
-. ftools, compile
-(compiling lftools.mlib for Stata 19.5)
-(library saved in c:\ado\personal/l/lftools.mlib)
+. capture ssc install require
 
 . 
 end of do-file
