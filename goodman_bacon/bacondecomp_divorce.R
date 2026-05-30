@@ -2,7 +2,7 @@
 # beginning page 21 of Goodman-Bacon (2021)
 
 # install and load the packages we'll use
-install.packages("bacondecomp")
+install.packages("bacondecomp")=
 install.packages("tidyverse")
 install.packages("readstata13")
 library(bacondecomp)

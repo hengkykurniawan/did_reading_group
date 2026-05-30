@@ -7,6 +7,7 @@
 
 # install and load the packages we'll use
 install.packages("bacondecomp")
+install.packages("tidyverse")
 install.packages("haven")
 install.packages("lfe")
 library(bacondecomp)
@@ -79,8 +80,11 @@ dd_formula <- as.formula(
 
 # Fixed effect regression using post as treatment variable 
 # this should be the top panel of table 9.8
-bacon_dd_reg <- felm(bacon_dd_formula, data = castle)
+bacon_dd_reg <- felm(dd_formula, data = castle)
 summary(bacon_dd_reg)
+
+# pull out the DD estimate (coefficient on post) for use below
+dd_estimate <- coef(bacon_dd_reg)["post"]
 
 ##############################################################################
 #                                 Bacondecomp                                #
@@ -95,7 +99,7 @@ df_bacon = bacon(l_homicide ~ post,
 
 # we should be able to verify that the estiamte from top panel of 
 # table 9.8 is the sum of the weighted estimates
-dd_estimate == sum(df_bacon$estimate*df_bacon$weight)
+all.equal(unname(dd_estimate), sum(df_bacon$estimate * df_bacon$weight))
 
 # plot the estimates and weights (without controls)
 # this is figure 9.26 
