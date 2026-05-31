@@ -42,3 +42,135 @@ all files already exist and are up to date.
 
 . ssc install reghdfe
 checking reghdfe consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. 
+. 
+. // Going to use the same Wolfers and Stevenson (2006) example we have been
+. 
+. use http://pped.org/bacon_example.dta
+
+. 
+. // standard twfe to compare with
+. gen K = year - _nfd
+(429 missing values generated)
+
+. 
+. forvalues l = 0/14 {
+  2.         gen L`l'_nfd = K == `l'
+  3. }
+
+. gen L15_nfd = K >= 20
+
+. 
+. forvalues l = 0/7 {
+  2.         gen F`l'_nfd = K == `l'
+  3. }
+
+. gen F8_nfd = K <= -8
+
+. 
+. reghdfe asmrs o.F1_nfd o.F2_nfd F3_nfd-F8_nfd L*_nfd, a(stfips year) cluster(
+> stfips)
+(MWFE estimator converged in 2 iterations)
+note: L3_nfd omitted because of collinearity
+note: L4_nfd omitted because of collinearity
+note: L5_nfd omitted because of collinearity
+note: L6_nfd omitted because of collinearity
+note: L7_nfd omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,617
+Absorbing 2 HDFE groups                           F(  17,     48) =       1.77
+Statistics robust to heteroskedasticity           Prob > F        =     0.0626
+                                                  R-squared       =     0.7027
+                                                  Adj R-squared   =     0.6838
+                                                  Within R-sq.    =     0.0118
+Number of clusters (stfips)  =         49         Root MSE        =    11.0343
+
+                                (Std. err. adjusted for 49 clusters in stfips)
+------------------------------------------------------------------------------
+             |               Robust
+       asmrs | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      F1_nfd |          0  (omitted)
+      F2_nfd |          0  (omitted)
+      F3_nfd |   2.891038   1.945416     1.49   0.144    -1.020484    6.802559
+      F4_nfd |   1.124693   2.454787     0.46   0.649    -3.810988    6.060374
+      F5_nfd |   2.108882   1.883001     1.12   0.268    -1.677145    5.894909
+      F6_nfd |   1.257877   2.385413     0.53   0.600    -3.538317    6.054071
+      F7_nfd |  -.2695745   2.255247    -0.12   0.905    -4.804053    4.264904
+      F8_nfd |  -1.091193    1.94844    -0.56   0.578    -5.008795    2.826408
+      L0_nfd |   2.761921   1.980741     1.39   0.170    -1.220625    6.744466
+      L1_nfd |   1.518774   2.673414     0.57   0.573    -3.856485    6.894034
+      L2_nfd |   1.755679   3.193696     0.55   0.585    -4.665676    8.177035
+      L3_nfd |          0  (omitted)
+      L4_nfd |          0  (omitted)
+      L5_nfd |          0  (omitted)
+      L6_nfd |          0  (omitted)
+      L7_nfd |          0  (omitted)
+      L8_nfd |  -2.007013   2.105577    -0.95   0.345    -6.240559    2.226534
+      L9_nfd |   .4085043   1.849891     0.22   0.826    -3.310952     4.12796
+     L10_nfd |  -3.599266   2.085985    -1.73   0.091     -7.79342    .5948892
+     L11_nfd |  -1.860194   2.167656    -0.86   0.395    -6.218558    2.498169
+     L12_nfd |  -.6926937   2.198558    -0.32   0.754    -5.113191    3.727803
+     L13_nfd |  -2.326601   1.926645    -1.21   0.233     -6.20038    1.547179
+     L14_nfd |  -.4878056   1.775639    -0.27   0.785    -4.057967    3.082356
+     L15_nfd |   -3.29387   2.429974    -1.36   0.182     -8.17966    1.591921
+       _cons |   53.33288   .8555821    62.34   0.000     51.61262    55.05315
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+      stfips |        49          49           0    *|
+        year |        33           1          32     |
+-----------------------------------------------------+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. 
+. estimates store did_base
+
+. 
+. // new estimator
+. did_imputation asmrs stfips year _nfd, horizons(0/15) pretrend(8)
+
+                                                         Number of obs = 1,343
+------------------------------------------------------------------------------
+       asmrs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |   .0245941   1.773557     0.01   0.989    -3.451515    3.500703
+        tau1 |  -1.302837   1.862783    -0.70   0.484    -4.953825    2.348151
+        tau2 |  -1.482703   2.653062    -0.56   0.576    -6.682609    3.717203
+        tau3 |   -.783506   2.590852    -0.30   0.762    -5.861483    4.294471
+        tau4 |  -2.925361   2.615227    -1.12   0.263    -8.051112     2.20039
+        tau5 |  -2.896338   2.127236    -1.36   0.173    -7.065644    1.272969
+        tau6 |   -3.90096   2.930106    -1.33   0.183    -9.643862    1.841943
+        tau7 |  -6.709107   2.361189    -2.84   0.004    -11.33695   -2.081261
+        tau8 |  -7.736856   3.135816    -2.47   0.014    -13.88294   -1.590769
+        tau9 |  -4.661367   2.962819    -1.57   0.116    -10.46839    1.145652
+       tau10 |  -8.067137   3.407498    -2.37   0.018    -14.74571   -1.388565
+       tau11 |  -6.264164    3.69885    -1.69   0.090    -13.51378    .9854482
+       tau12 |  -5.066232   4.356869    -1.16   0.245    -13.60554    3.473074
+       tau13 |  -6.877425   4.218824    -1.63   0.103    -15.14617    1.391319
+       tau14 |  -6.023911   4.038281    -1.49   0.136     -13.9388    1.890974
+       tau15 |  -7.814652   4.380923    -1.78   0.074     -16.4011    .7717997
+        pre1 |  -.4597367   3.882701    -0.12   0.906    -8.069691    7.150217
+        pre2 |   -.648431   3.107489    -0.21   0.835    -6.738997    5.442135
+        pre3 |  -1.881632   3.055748    -0.62   0.538    -7.870788    4.107525
+        pre4 |   .4971688   2.972649     0.17   0.867    -5.329117    6.323454
+        pre5 |  -2.077447   2.683022    -0.77   0.439    -7.336073     3.18118
+        pre6 |  -.2582567   2.832716    -0.09   0.927    -5.810279    5.293765
+        pre7 |   .8623449   2.365663     0.36   0.715    -3.774269    5.498959
+        pre8 |  -.1133313   1.625704    -0.07   0.944    -3.299653    3.072991
+------------------------------------------------------------------------------
+
+. estimates store did_imp
+
+. 
+. // event study plot
+. event_plot did_imp did_base, stub_lag(tau# L#_nfd) stub_lead(pre# F#_nfd) tog
+> ether ///
+> plottype(scatter) default_look noautolegend ///
+>                 graph_opt(xtitle("Days since the event") ytitle("OLS coeffici
+> ents") xlabel(-8(1)15) legend(label (3 "OLS") label (1 "BJS")))
